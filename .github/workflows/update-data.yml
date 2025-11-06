@@ -30,9 +30,11 @@ jobs:
       
       - name: Install dependencies
         run: npm install
+        working-directory: ./ConnectJus-Docs.-Calculator-main
       
       - name: Fetch and update data
         run: npm run update
+        working-directory: ./ConnectJus-Docs.-Calculator-main
       
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -41,7 +43,7 @@ jobs:
           commit_user_name: GitHub Actions Bot
           commit_user_email: github-actions-bot@github.com
           commit_author: GitHub Actions Bot <github-actions-bot@github.com>
-          file_pattern: 'data/*'
+          file_pattern: 'ConnectJus-Docs.-Calculator-main/data/*'
           skip_dirty_check: false
           skip_fetch: false
           skip_checkout: false
