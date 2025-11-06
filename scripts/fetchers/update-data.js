@@ -9,12 +9,16 @@ const fetchersDir = path.resolve(__dirname, 'fetchers');
 const dataDir = path.resolve(__dirname, '../data');
 const indicesDir = path.join(dataDir, 'indices');
 
+// Lista explícita dos fetchers a serem executados
+const FETCHERS_TO_RUN = ['ipca.js', 'selic.js'];
+
 async function runFetcher(scriptPath) {
     try {
-        console.log(`Executando fetcher: ${path.basename(scriptPath)}...`);
+        const scriptName = path.basename(scriptPath);
+        console.log(`Executando fetcher: ${scriptName}...`);
         const { stdout, stderr } = await execPromise(`node "${scriptPath}"`);
         if (stderr) {
-            console.error(`Erro no fetcher ${path.basename(scriptPath)}:\n`, stderr);
+            console.error(`Erro no fetcher ${scriptName}:\n`, stderr);
             return false;
         }
         console.log(stdout.trim());
@@ -50,19 +54,17 @@ async function updateMetadata() {
 async function main() {
     console.log('Iniciando orquestração da atualização de dados...');
 
-    // Garante que os diretórios de dados existam
+    // Garante que o diretório de saída exista
     await fs.ensureDir(indicesDir);
 
-    const excludedFetchers = new Set(['feriados-nacionais.js', 'inpc.js']);
-    const fetcherFiles = await fs.readdir(fetchersDir);
-    const fetcherPromises = fetcherFiles
-        .filter(file => file.endsWith('.js') && !excludedFetchers.has(file))
-        .map(file => runFetcher(path.join(fetchersDir, file)));
+    const fetcherPromises = FETCHERS_TO_RUN.map(fetcherFile =>
+        runFetcher(path.join(fetchersDir, fetcherFile))
+    );
 
     const results = await Promise.all(fetcherPromises);
 
     if (results.some(res => !res)) {
-        console.warn('Um ou mais fetchers falharam. O manifest será gerado com os dados que foram obtidos com sucesso.');
+        console.warn('Um ou mais fetchers falharam. O manifest será gerado com os dados obtidos com sucesso.');
     } else {
         console.log('Todos os fetchers foram executados com sucesso.');
     }
