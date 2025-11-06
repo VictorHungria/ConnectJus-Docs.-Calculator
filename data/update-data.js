@@ -8,7 +8,6 @@ const execPromise = util.promisify(exec);
 const fetchersDir = path.resolve(__dirname, 'fetchers');
 const dataDir = path.resolve(__dirname, '../data');
 const indicesDir = path.join(dataDir, 'indices');
-const holidaysDir = path.join(dataDir, 'holidays');
 
 async function runFetcher(scriptPath) {
     try {
@@ -30,17 +29,11 @@ async function createManifest() {
     console.log('Criando manifest.json...');
     const manifest = {
         indices: [],
-        holidays: []
     };
 
     if (await fs.pathExists(indicesDir)) {
         const indexFiles = await fs.readdir(indicesDir);
         manifest.indices = indexFiles.filter(f => f.endsWith('.json'));
-    }
-
-    if (await fs.pathExists(holidaysDir)) {
-        const holidayFiles = await fs.readdir(holidaysDir);
-        manifest.holidays = holidayFiles.filter(f => f.endsWith('.json'));
     }
 
     await fs.writeJson(path.join(dataDir, 'manifest.json'), manifest, { spaces: 2 });
@@ -59,11 +52,11 @@ async function main() {
 
     // Garante que os diretórios de dados existam
     await fs.ensureDir(indicesDir);
-    await fs.ensureDir(holidaysDir);
 
+    const excludedFetchers = new Set(['feriados-nacionais.js', 'inpc.js']);
     const fetcherFiles = await fs.readdir(fetchersDir);
     const fetcherPromises = fetcherFiles
-        .filter(file => file.endsWith('.js'))
+        .filter(file => file.endsWith('.js') && !excludedFetchers.has(file))
         .map(file => runFetcher(path.join(fetchersDir, file)));
 
     const results = await Promise.all(fetcherPromises);
