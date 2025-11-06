@@ -10,7 +10,7 @@ const dataDir = path.resolve(__dirname, '../data');
 const indicesDir = path.join(dataDir, 'indices');
 
 // Lista explícita dos fetchers a serem executados
-const FETCHERS_TO_RUN = ['ipca.js', 'selic.js'];
+const FETCHERS_TO_RUN = ['ipca.js', 'selic.js', 'taxa-legal.js'];
 
 async function runFetcher(scriptPath) {
     try {
