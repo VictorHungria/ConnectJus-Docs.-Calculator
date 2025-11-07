@@ -1,6 +1,7 @@
 {
   "indices": [
     "ipca.json",
+    "selic-diaria.json",
     "selic.json",
     "taxa-legal.json"
   ]
