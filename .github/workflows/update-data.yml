@@ -37,3 +37,9 @@ jobs:
         with:
           commit_message: "chore(data): Atualiza fontes de dados (índices)"
           file_pattern: "data/**"
+          # ----------------------------------------------------------------
+
+          pull_strategy: "--rebase"
+          # ----------------------------------------------------------------
+          
+          commit_author: VictorHungria <89818055+VictorHungria@users.noreply.github.com>
