@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const axios = require('axios');
 
-const IPCA_API_URL = 'https://api.bcb.gov.br/dados/serie/bcdata.sgs.10844/dados?formato=json';
+const IPCA_API_URL = 'https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json';
 const OUTPUT_DIR = path.resolve(__dirname, '../../data/indices');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'ipca.json');
 
